@@ -1,5 +1,8 @@
 .env
+.env.*
+*.env
 .venv
+.venv/
 __pycache__/
 *.pyc
 *.pyo
@@ -10,3 +13,15 @@ venv/
 ENV/
 build/
 develop-eggs/
+
+# Database
+*.db
+*.sqlite3
+
+# Media / output folders
+uploads/
+downloads/
+output/
+audio/
+videos/
+data/
