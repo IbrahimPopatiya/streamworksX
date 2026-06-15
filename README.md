@@ -1,79 +1,259 @@
-# 🎬 StreamWorksX
+# StreamWorksX – Multimedia Processing Platform
 
-StreamWorksX is a **multi-media processing platform** built with FastAPI. It provides APIs for video/audio downloading and processing, OCR text extraction from images, and persistent storage of media metadata in PostgreSQL.
+StreamWorksX is a **backend multimedia processing system** designed to automatically process different types of media files including video, audio, and images.
 
-## ✨ Features
+The platform provides APIs for **media processing workflows**, allowing developers to build applications that can download videos, transcribe audio, extract text from images, and process multimedia content efficiently.
 
-- 📥 Download YouTube videos and playlists
-- 🎵 Extract audio from videos/playlists
-- 🖼️ OCR text extraction from images (pytesseract)
-- 🎞️ Video/audio processing pipelines (FFmpeg, moviepy, pydub)
-- 🗄️ Persistent metadata storage with PostgreSQL + SQLAlchemy
+StreamWorksX acts as a **central backend service for handling multimedia pipelines**.
 
-## 🛠️ Tech Stack
+---
 
-- **Framework:** FastAPI, Uvicorn
-- **Media processing:** FFmpeg, moviepy, ffmpeg-python, pydub, imageio
-- **OCR:** pytesseract, Pillow
-- **YouTube:** pytube / pytubefix
-- **Database:** PostgreSQL, SQLAlchemy, psycopg2
-- **Config:** python-dotenv
+# Project Overview
 
-## ⚙️ Setup
+Modern applications often require processing large amounts of multimedia data such as videos, audio recordings, and images.
 
-### Prerequisites
+StreamWorksX provides a unified backend system that can:
 
-- Python 3.10+
-- [FFmpeg](https://ffmpeg.org/download.html) installed and available on your `PATH`
-- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) installed and available on your `PATH`
-- PostgreSQL database
+* Download multimedia content
+* Process videos
+* Transcribe audio into text
+* Extract text from images using OCR
+* Expose APIs for media workflows
 
-### Installation
+This system helps automate media processing tasks for developers building **AI, media, and automation platforms**.
 
-```bash
-git clone https://github.com/IbrahimPopatiya/streamworksX.git
-cd streamworksX
+---
 
+# Features
+
+* Video downloading and processing
+* Audio transcription
+* Image text extraction using OCR
+* Media processing APIs
+* FastAPI backend for scalable API services
+* Automated multimedia workflow management
+
+---
+
+# Tech Stack
+
+* Python
+* FastAPI
+* FFmpeg
+* MoviePy
+* PyTesseract
+* PostgreSQL / Local Storage
+* uvicorn (API server)
+
+---
+
+# Prerequisites
+
+Before running the project, make sure the following are installed:
+
+* Python **3.10+**
+* Git
+* FFmpeg
+* Tesseract OCR
+
+### Install FFmpeg
+
+Download from:
+
+https://ffmpeg.org/download.html
+
+After installation verify:
+
+```
+ffmpeg -version
+```
+
+### Install Tesseract OCR
+
+Download from:
+
+https://github.com/tesseract-ocr/tesseract
+
+Verify installation:
+
+```
+tesseract --version
+```
+
+---
+
+# Clone the Repository
+
+Clone the project from GitHub.
+
+```
+git clone https://github.com/YOUR_USERNAME/streamworksx.git
+```
+
+Move into the project directory.
+
+```
+cd streamworksx
+```
+
+---
+
+# Create Virtual Environment
+
+Create a Python virtual environment.
+
+```
 python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
+```
 
+---
+
+# Activate Virtual Environment
+
+### Windows
+
+```
+.venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```
+source .venv/bin/activate
+```
+
+---
+
+# Install Dependencies
+
+Install required Python packages.
+
+```
 pip install -r requirements.txt
 ```
 
-### Environment Variables
+---
 
-Create a `.env` file in the project root:
+# Run the Application
 
-```env
-DATABASE_URL=postgresql://<user>:<password>@<host>:<port>/<database>
+Start the FastAPI server.
+
+```
+python main.py
 ```
 
-## ▶️ Running the App
+or
 
-```bash
+```
 uvicorn main:app --reload
 ```
 
-The API will be available at `http://127.0.0.1:8000`, with interactive docs at `http://127.0.0.1:8000/docs`.
+---
 
-## 📁 Project Structure
+# API Documentation
+
+Once the server is running, open the interactive API docs:
 
 ```
-.
-├── main.py          # FastAPI app & routes
-├── crud.py          # Media processing / OCR / download logic
-├── database.py      # Database connection setup
-├── models.py        # SQLAlchemy models
-├── schemas.py        # Pydantic schemas
-├── create_table.py  # DB table creation script
-├── data/            # Uploaded/downloaded media (ignored)
-├── audio/           # Extracted audio (ignored)
-└── videos/          # Downloaded videos (ignored)
+http://127.0.0.1:8000/docs
 ```
 
-## 📄 License
+This allows you to test the APIs directly from the browser.
 
-This project is provided as-is for educational and personal use.
+---
+
+# Project Structure
+
+```
+STREAMWORKSX
+│
+├── audio
+│
+├── data
+│
+├── videos
+│
+├── create_table.py
+├── crud.py
+├── database.py
+├── main.py
+├── models.py
+├── schemas.py
+│
+├── .env
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# Core Components
+
+### Video Processing
+
+Handles video downloading and manipulation using **FFmpeg** and **MoviePy**.
+
+Example capabilities:
+
+* Download videos
+* Convert formats
+* Extract audio from video
+
+---
+
+### Audio Transcription
+
+Processes audio files and converts speech into text.
+
+Useful for:
+
+* Podcast transcription
+* Video subtitle generation
+* Voice-based applications
+
+---
+
+### Image OCR
+
+Uses **PyTesseract** to extract text from images.
+
+Example use cases:
+
+* Document scanning
+* Text recognition
+* Image-based data extraction
+
+---
+
+### Media APIs
+
+FastAPI endpoints provide services for:
+
+* Uploading media
+* Processing multimedia files
+* Retrieving results
+
+---
+
+# Development Notes
+
+* Always activate the virtual environment before running the project
+* Make sure **FFmpeg** and **Tesseract OCR** are installed on your system
+* API endpoints can be tested using `/docs`
+
+---
+
+# Future Improvements
+
+* Queue-based media processing
+* Background task processing (Celery / Redis)
+* Cloud storage integration
+* Batch media processing
+* Docker deployment
+
+---
+
+# License
+
+This project is open-source and available under the MIT License.
