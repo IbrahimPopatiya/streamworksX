@@ -12,6 +12,12 @@ class Files(Base):
     filextension = Column(String)
     datetime = Column(DateTime,default=func.now())
 
+class Audio(Base):
+    __tablename__ = 'audio'
+    id = Column(Integer,primary_key=True,index=True,autoincrement=True)
+    filename = Column(String,nullable=False)
+    datetime = Column(DateTime,default=func.now())
+
     
 
 

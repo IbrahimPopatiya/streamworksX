@@ -8,11 +8,22 @@ import re
 from models import Files
 from database import engine,SessionLocal,Base
 from fastapi.responses import StreamingResponse,HTMLResponse,FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import schemas,models
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -143,6 +154,12 @@ def download_audio_of_playlist(path:str):
     download_audio_from_playlist(path)
     return "audio playlist downloaded"
 
+
+
+@app.get("/", response_class=HTMLResponse)
+def serve_ui():
+    with open("static/index.html", "r") as f:
+        return f.read()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamWorksX</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #2a2a4a;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    header h1 {
+      font-size: 1.6rem;
+      background: linear-gradient(90deg, #7c3aed, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+    header p { color: #888; font-size: 0.85rem; }
+    .container { max-width: 720px; margin: 3rem auto; padding: 0 2rem; }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .tab {
+      padding: 0.6rem 1.2rem;
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #aaa;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .tab:hover { border-color: #7c3aed; color: #ccc; }
+    .tab.active {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: #fff;
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 14px;
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h3 { color: #c4b5fd; margin-bottom: 1.2rem; font-size: 1.15rem; }
+    label { display: block; color: #999; font-size: 0.85rem; margin-bottom: 0.4rem; margin-top: 1.2rem; }
+    input[type="text"], input[type="url"] {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: #0f0f1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #7c3aed; }
+    .btn {
+      margin-top: 1.5rem;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-cyan {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #0d0d1a;
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+      min-height: 2rem;
+      display: none;
+    }
+    .result.show { display: block; }
+    .result.error { border-color: #ef4444; color: #fca5a5; }
+    .result.success { border-color: #22c55e; color: #86efac; }
+    .file-input-wrap {
+      margin-top: 0.5rem;
+      position: relative;
+    }
+    .file-input-wrap input[type="file"] {
+      width: 100%;
+      padding: 0.65rem;
+      background: #0f0f1a;
+      border: 1px dashed #444;
+      border-radius: 8px;
+      color: #aaa;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .files-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+    }
+    .files-table th {
+      text-align: left;
+      padding: 0.5rem;
+      color: #7c3aed;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .files-table td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #1a1a2e;
+      color: #bbb;
+    }
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid #555;
+      border-top-color: #7c3aed;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 0.4rem;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>StreamWorksX</h1>
+      <p>Multimedia Processing Platform</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" data-tab="video">Download Video</div>
+      <div class="tab" data-tab="audio">Extract Audio</div>
+      <div class="tab" data-tab="ocr">Image OCR</div>
+      <div class="tab" data-tab="files">My Files</div>
+    </div>
+
+    <!-- Download Video -->
+    <div class="panel active" id="video">
+      <div class="card">
+        <h3>Download YouTube Video</h3>
+        <label>YouTube URL</label>
+        <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+        <label>Username</label>
+        <input type="text" id="videoUser" placeholder="your_username">
+        <button class="btn" onclick="downloadVideo()">Download Video</button>
+        <div class="result" id="videoResult"></div>
+      </div>
+    </div>
+
+    <!-- Extract Audio -->
+    <div class="panel" id="audio">
+      <div class="card">
+        <h3>Extract Audio from YouTube Video</h3>
+        <label>YouTube URL</label>
+        <input type="url" id="audioUrl" placeholder="https://www.youtube.com/watch?v=...">
+        <label>Username</label>
+        <input type="text" id="audioUser" placeholder="your_username">
+        <button class="btn btn-cyan" onclick="extractAudio()">Extract Audio</button>
+        <div class="result" id="audioResult"></div>
+      </div>
+    </div>
+
+    <!-- Image OCR -->
+    <div class="panel" id="ocr">
+      <div class="card">
+        <h3>Extract Text from Image</h3>
+        <label>Upload an image (PNG, JPG, HEIC)</label>
+        <div class="file-input-wrap">
+          <input type="file" id="ocrFile" accept="image/*">
+        </div>
+        <button class="btn" onclick="extractText()">Extract Text</button>
+        <div class="result" id="ocrResult"></div>
+      </div>
+    </div>
+
+    <!-- My Files -->
+    <div class="panel" id="files">
+      <div class="card">
+        <h3>Lookup Files by Username</h3>
+        <label>Username</label>
+        <input type="text" id="filesUser" placeholder="your_username">
+        <button class="btn btn-cyan" onclick="loadFiles()">Load Files</button>
+        <div class="result" id="filesResult"></div>
+        <table class="files-table" id="filesTable" style="display:none">
+          <thead><tr><th>#</th><th>Filename</th><th>Type</th><th>UUID</th><th>Date</th></tr></thead>
+          <tbody id="filesBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '';
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    function showResult(id, msg, isError) {
+      const el = document.getElementById(id);
+      el.className = 'result show ' + (isError ? 'error' : 'success');
+      el.textContent = msg;
+    }
+
+    function showLoading(id) {
+      const el = document.getElementById(id);
+      el.className = 'result show';
+      el.innerHTML = '<span class="spinner"></span> Processing...';
+    }
+
+    async function downloadVideo() {
+      const url = document.getElementById('videoUrl').value.trim();
+      const username = document.getElementById('videoUser').value.trim();
+      if (!url || !username) return showResult('videoResult', 'Please fill in both fields.', true);
+      showLoading('videoResult');
+      try {
+        const res = await fetch(API + '/download_yt_video', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, username })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || JSON.stringify(data));
+        showResult('videoResult', 'Video downloaded!\nUUID: ' + data.video_uuid + '\nStream: ' + API + '/get_video/' + data.video_uuid, false);
+      } catch (e) {
+        showResult('videoResult', 'Error: ' + e.message, true);
+      }
+    }
+
+    async function extractAudio() {
+      const url = document.getElementById('audioUrl').value.trim();
+      const username = document.getElementById('audioUser').value.trim();
+      if (!url || !username) return showResult('audioResult', 'Please fill in both fields.', true);
+      showLoading('audioResult');
+      try {
+        const res = await fetch(API + '/get_audio_of_video', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, username })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || JSON.stringify(data));
+        showResult('audioResult', 'Audio extracted!\nAudio ID: ' + data.audio_id + '\nStream: ' + API + '/get_audio/' + data.audio_id, false);
+      } catch (e) {
+        showResult('audioResult', 'Error: ' + e.message, true);
+      }
+    }
+
+    async function extractText() {
+      const file = document.getElementById('ocrFile').files[0];
+      if (!file) return showResult('ocrResult', 'Please select an image file.', true);
+      showLoading('ocrResult');
+      try {
+        const fd = new FormData();
+        fd.append('Image', file);
+        const res = await fetch(API + '/get_text', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || JSON.stringify(data));
+        showResult('ocrResult', data || '(No text detected)', false);
+      } catch (e) {
+        showResult('ocrResult', 'Error: ' + e.message, true);
+      }
+    }
+
+    async function loadFiles() {
+      const username = document.getElementById('filesUser').value.trim();
+      if (!username) return showResult('filesResult', 'Please enter a username.', true);
+      showLoading('filesResult');
+      try {
+        const res = await fetch(API + '/get_user_files/' + encodeURIComponent(username));
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || JSON.stringify(data));
+        document.getElementById('filesResult').className = 'result';
+        document.getElementById('filesResult').textContent = '';
+        const table = document.getElementById('filesTable');
+        const tbody = document.getElementById('filesBody');
+        tbody.innerHTML = '';
+        if (!data.length) {
+          showResult('filesResult', 'No files found for this user.', true);
+          table.style.display = 'none';
+          return;
+        }
+        table.style.display = 'table';
+        data.forEach((f, i) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${i+1}</td><td>${f.filename || '-'}</td><td>${f.filetype || '-'}</td><td style="font-family:monospace;font-size:0.75rem">${f.uuidname || '-'}</td><td>${f.datetime ? new Date(f.datetime).toLocaleString() : '-'}</td>`;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        showResult('filesResult', 'Error: ' + e.message, true);
+        document.getElementById('filesTable').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
