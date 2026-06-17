@@ -244,6 +244,22 @@ FastAPI endpoints provide services for:
 
 ---
 
+# Screenshots
+
+### Download Video
+![Download Video](public/doenload_video.png)
+
+### Extract Audio
+![Extract Audio](public/extract_audio.png)
+
+### Image OCR
+![Image OCR](public/image_ocr.png)
+
+### My Files
+![My Files](public/my_files.png)
+
+---
+
 # Future Improvements
 
 * Queue-based media processing
